@@ -14,7 +14,11 @@ from pathlib import Path
 import os
 import environ
 
-
+CSRF_TRUSTED_ORIGINS = env.list('CSRF_TRUSTED_ORIGINS', default=[
+    'https://djangocomics-production-e6b8.up.railway.app',
+    'http://localhost:8000',
+    'http://127.0.0.1:8000',
+])
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
