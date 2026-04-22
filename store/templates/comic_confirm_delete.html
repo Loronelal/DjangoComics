@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block title %}Удаление комикса{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Удалить комикс "{{ comic.title }}"?</h2>
+    <p class="text-danger">Это действие нельзя будет отменить.</p>
+    
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">
+            <i class="fas fa-trash"></i> Да, удалить
+        </button>
+        <a href="{% url 'store:comic_detail' comic.slug %}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Нет, вернуться назад
+        </a>
+    </form>
+</div>
+{% endblock %}

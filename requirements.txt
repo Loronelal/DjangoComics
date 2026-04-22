@@ -1,0 +1,12 @@
+asgiref==3.11.1
+Django>=4.2
+Pillow>=10.0.0
+sqlparse==0.5.5
+gunicorn==21.2.0
+setuptools
+whitenoise==6.9.0
+django-environ>=0.10.0
+python-slugify
+transliterate
+#cloudinary
+#django-cloudinary-storage

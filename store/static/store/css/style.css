@@ -1,0 +1,44 @@
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1 0 auto;
+}
+
+footer {
+    flex-shrink: 0;
+}
+
+.comic-card .card-img-top {
+    width: 100%;
+    height: auto;
+    max-height: 300px;
+    object-fit: contain;
+    background-color: #f8f9fa; /* фон для прозрачных областей */
+}
+
+
+@media (max-width: 576px) {
+    .comic-card .card-img-top {
+        height: 220px;
+    }
+}
+
+
+/* Ограничиваем высоту картинок в модальном окне предпросмотра */
+#previewModal .modal-body {
+    max-height: 70vh;
+    overflow-y: auto;
+}
+#previewModal .carousel-item img {
+    max-height: 60vh;
+    object-fit: contain;
+    background-color: #f8f9fa; /* фон для прозрачных областей */
+}

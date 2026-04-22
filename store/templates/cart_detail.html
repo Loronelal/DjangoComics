@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Корзина</h2>
+    {% if cart.items.all %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Комикс</th>
+                <th>Цена</th>
+                <th>Кол-во</th>
+                <th>Сумма</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in cart.items.all %}
+            <tr>
+                <td>{{ item.comic.title }}</td>
+                <td>{{ item.comic.price }} ₽</td>
+                <td>{{ item.quantity }}</td>
+                <td class="cart-item-total">{{ item.total_price }} ₽</td>
+                <td><a href="{% url 'store:cart_remove' item.comic.id %}"
+                        class="btn btn-sm btn-danger remove-from-cart-btn">
+                        Удалить
+                    </a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <h4>Итого: <span id="cartTotal">{{ cart.total_price }} ₽</span></h4>
+    {% else %}
+    <p>Корзина пуста</p>
+    {% endif %}
+    <a href="{% url 'store:comic_list' %}" class="btn btn-primary">Продолжить покупки</a>
+</div>
+{% endblock %}

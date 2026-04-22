@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ comic.title }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-5">
+            {% if comic.image_url %}
+            <img src="{{ comic.image_url }}" class="img-fluid" alt="{{ comic.title }}">
+            {% elif comic.cover_image %}
+            <img src="{{ comic.cover_image.url }}" class="img-fluid" alt="{{ comic.title }}">
+            {% else %}
+            <img src="https://via.placeholder.com/3000x4500?text=No+Image" class="img-fluid">
+            {% endif %}
+        </div>
+        <div class="col-md-7 d-flex flex-column"> <!-- ← добавляем flex-колонку -->
+            <h1>{{ comic.title }}</h1>
+            <p><strong>Автор:</strong> {{ comic.author }}</p>
+            <p><strong>Издательство:</strong> {{ comic.publisher.name }}</p>
+            <p><strong>Категория:</strong> {{ comic.category.name }}</p>
+            <p><strong>Год выпуска:</strong> {{ comic.release_date|date:"Y" }}</p>
+            <p><strong>Страниц:</strong> {{ comic.pages }}</p>
+            <p><strong>Язык:</strong> {{ comic.language }}</p>
+            <p><strong>Рейтинг:</strong>
+                {% for i in "12345"|make_list %}
+                {% if forloop.counter <= comic.rating|floatformat:"0"|add:"0" %} <i class="fas fa-star text-warning">
+                    </i>
+                    {% else %}
+                    <i class="far fa-star text-warning"></i>
+                    {% endif %}
+                    {% endfor %}
+            </p>
+            <h3 class="text-primary">{{ comic.price }} ₽</h3>
+            <p>{{ comic.description|linebreaks }}</p>
+
+            <!-- Блок с кнопками прижимается к низу -->
+            <div class="mt-auto">
+                <a href="{% url 'store:cart_add' comic.id %}" class="btn btn-success btn-lg add-to-cart-btn">
+                    <i class="fas fa-cart-plus"></i> Добавить в корзину
+                </a>
+
+                <a href="{% url 'store:comic_update' comic.slug %}" class="btn btn-warning btn-lg">
+                    <i class="fas fa-edit"></i> Редактировать
+                </a>
+                <a href="{% url 'store:comic_delete' comic.slug %}" class="btn btn-danger btn-lg">
+                    <i class="fas fa-trash"></i> Удалить
+                </a>
+
+
+                {% if comic.preview_pages|length > 0 %}
+                <button class="btn btn-outline-secondary btn-lg" data-bs-toggle="modal" data-bs-target="#previewModal">
+                    <i class="fas fa-book-open"></i> Читать отрывок
+                </button>
+
+                <!-- Модальное окно отрывка -->
+                <div class="modal fade" id="previewModal" tabindex="-1">
+                    <div class="modal-dialog modal-md modal-dialog-centered"> <!-- ← было modal-lg -->
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Отрывок: {{ comic.title }}</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body p-0">
+                                <div id="previewCarousel" class="carousel slide" data-bs-ride="carousel">
+                                    <div class="carousel-inner">
+                                        {% for page_url in comic.preview_pages %}
+                                        <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                                            <img src="{{ page_url }}" class="d-block w-100"
+                                                alt="Страница {{ forloop.counter }}">
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                    <button class="carousel-control-prev" type="button"
+                                        data-bs-target="#previewCarousel" data-bs-slide="prev">
+                                        <span class="carousel-control-prev-icon"></span>
+                                    </button>
+                                    <button class="carousel-control-next" type="button"
+                                        data-bs-target="#previewCarousel" data-bs-slide="next">
+                                        <span class="carousel-control-next-icon"></span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {% endif %}
+
+                <a href="{% url 'store:comic_list' %}" class="btn btn-secondary btn-lg">
+                    <i class="fas fa-arrow-left"></i> Назад к каталогу
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

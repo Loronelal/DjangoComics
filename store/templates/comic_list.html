@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Каталог комиксов{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Кнопка управления фильтрами (всегда видна сверху) -->
+    <div class="row mb-2">
+        <div class="col-12">
+            <button class="btn btn-outline-secondary btn-sm" id="toggleFiltersBtn" type="button">
+                <i class="fas fa-chevron-left"></i> Скрыть фильтры
+            </button>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Боковая панель с фильтрами (скрывается целиком) -->
+        <div class="col-lg-3 col-md-4 sidebar" id="filterSidebar">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Фильтры</h5>
+                </div>
+                <div class="card-body">
+                    <form id="filterForm">
+                        <div class="mb-3">
+                            <label class="form-label">Поиск</label>
+                            <input type="text" name="search" id="searchInput" class="form-control"
+                                placeholder="Название или автор...">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Категория</label>
+                            <select name="category" id="categorySelect" class="form-select">
+                                <option value="">Все</option>
+                                {% for category in categories %}
+                                <option value="{{ category.slug }}">{{ category.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Издательство</label>
+                            <select name="publisher" id="publisherSelect" class="form-select">
+                                <option value="">Все</option>
+                                {% for publisher in publishers %}
+                                <option value="{{ publisher.slug }}">{{ publisher.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-6">
+                                <label class="form-label">Мин. цена</label>
+                                <input type="number" name="min_price" id="minPrice" class="form-control" step="100">
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label">Макс. цена</label>
+                                <input type="number" name="max_price" id="maxPrice" class="form-control" step="100">
+                            </div>
+                        </div>
+
+                        <div class="form-check mb-3">
+                            <input type="checkbox" name="in_stock" id="inStock" class="form-check-input">
+                            <label class="form-check-label">Только в наличии</label>
+                        </div>
+
+                        <!-- <button type="submit" class="btn btn-primary w-100 mb-2">Применить</button> -->
+                        <button type="button" id="resetFilters" class="btn btn-secondary w-100">Сбросить</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Список комиксов (ширина изменяется динамически) -->
+        <div class="col-lg-9 col-md-8" id="contentCol">
+            <div id="loadingIndicator" class="text-center py-5" style="display: none;">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Загрузка...</span>
+                </div>
+            </div>
+
+            <div class="d-flex flex-column" style="min-height: 70vh;">
+                <div id="comicsContainer" class="flex-fill">
+                    {% include 'partials/comic_list_items.html' %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно для быстрого просмотра -->
+<div class="modal fade" id="quickViewModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Быстрый просмотр</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="quickViewContent"></div>
+        </div>
+    </div>
+</div>
+{% endblock %}

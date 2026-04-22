@@ -1,0 +1,76 @@
+{% load static %}
+
+{% if comics %}
+<div class="row">
+    {% for comic in comics %}
+    <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
+        <div class="card h-100 comic-card">
+            <div class="position-relative">
+                {# Приоритет: image_url, затем cover_image, затем заглушка #}
+                {% if comic.image_url %}
+                <img src="{{ comic.image_url }}" class="card-img-top" alt="{{ comic.title }}">
+                {% elif comic.cover_image %}
+                <img src="{{ comic.cover_image.url }}" class="card-img-top" alt="{{ comic.title }}">
+                {% else %}
+                <img src="https://via.placeholder.com/200x300?text=No+Image" class="card-img-top" alt="No image">
+                {% endif %}
+
+                {% if comic.is_bestseller %}
+                <span class="badge bg-warning position-absolute top-0 start-0 m-2">Хит</span>
+                {% endif %}
+                {% if comic.is_new %}
+                <span class="badge bg-success position-absolute top-0 end-0 m-2">Новинка</span>
+                {% endif %}
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">{{ comic.title }}</h5>
+                <p class="card-text text-muted">{{ comic.author }}</p>
+                <p class="price fw-bold text-primary">{{ comic.price }} ₽</p>
+                <div class="d-grid gap-2">
+                    <a href="{% url 'store:comic_detail' comic.slug %}" class="btn btn-sm btn-outline-primary">
+                        <i class="fas fa-info-circle"></i> Подробнее
+                    </a>
+                    <button class="btn btn-sm btn-outline-info quick-view-btn" data-id="{{ comic.id }}">
+                        <i class="fas fa-eye"></i> Быстрый просмотр
+                    </button>
+                    <a href="{% url 'store:cart_add' comic.id %}" class="btn btn-sm btn-success add-to-cart-btn">
+                        <i class="fas fa-cart-plus"></i> В корзину
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Пагинация -->
+{% if comics.has_other_pages %}
+<nav aria-label="Page navigation">
+    <ul class="pagination justify-content-center" class="mt-auto">
+        {% if comics.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="#" data-page="{{ comics.previous_page_number }}">«</a>
+        </li>
+        {% endif %}
+
+        {% for num in comics.paginator.page_range %}
+        <li class="page-item {% if comics.number == num %}active{% endif %}">
+            <a class="page-link" href="#" data-page="{{ num }}">{{ num }}</a>
+        </li>
+        {% endfor %}
+
+        {% if comics.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="#" data-page="{{ comics.next_page_number }}">»</a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+{% else %}
+<div class="text-center py-5">
+    <i class="fas fa-book-open fa-3x text-muted mb-3"></i>
+    <h3>Комиксы не найдены</h3>
+    <p class="text-muted">Попробуйте изменить параметры поиска</p>
+</div>
+{% endif %}
