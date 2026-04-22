@@ -42,3 +42,10 @@ footer {
     object-fit: contain;
     background-color: #f8f9fa; /* фон для прозрачных областей */
 }
+
+
+
+.comic-detail-actions .btn {
+    margin-right: 8px;
+    margin-bottom: 8px;
+}
